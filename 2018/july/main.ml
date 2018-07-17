@@ -10,13 +10,14 @@ let find_opt table key = try
 with Not_found -> None
 
 let memo_obscure n =
-  let memo = Array.init (3 * n) Hashtbl.create in
-  for i = 1 to n do
-    for j = i to n do
-      for k = j to n do
-        match find_opt memo.(i + j + k - 1) (i * j * k) with
-        | None -> Hashtbl.add memo.(i + j + k - 1) (i * j * k) false
-        | Some false -> Hashtbl.replace memo.(i + j + k - 1) (i * j * k) true
+  let memo = Array.init n Hashtbl.create in
+  for s = 3 to n do
+    for i = 1 to s / 3 do
+      for j = i to (s - i) / 2 do
+        let k = s - i - j in
+        match find_opt memo.(s - 1) (i * j * k) with
+        | None -> Hashtbl.add memo.(s - 1) (i * j * k) false
+        | Some false -> Hashtbl.replace memo.(s - 1) (i * j * k) true
         | Some true -> ()
       done
     done
@@ -30,9 +31,10 @@ let rec valid memo n t = n = 0 || is_obscure memo t && valid memo (n - 1) (add t
 
 let print_obscure n =
   let memo = memo_obscure n in
-  for i = 1 to n do
-    for j = i to n do
-      for k = j to n do
+  for s = 3 to n do
+    for i = 1 to s / 3 do
+      for j = i to (s - i) / 2 do
+        let k = s - i - j in
         if is_obscure memo (i, j, k) then Printf.printf "%d %d %d\n" i j k
         else ()
       done
@@ -40,14 +42,15 @@ let print_obscure n =
   done
 
 let print_valid y n =
-  let memo = memo_obscure n in
-  for i = 1 to n do
-    for j = i to n do
-      for k = j to n do
+  let memo = memo_obscure (n + 3 * (y - 1)) in
+  for s = 3 to n do
+    for i = 1 to s / 3 do
+      for j = i to (s - i) / 2 do
+        let k = s - i - j in
         if valid memo y (i, j, k) then Printf.printf "%d %d %d\n" i j k
         else ()
       done
     done
   done
 
-let () = print_valid 4 100
+let () = print_valid 4 300
