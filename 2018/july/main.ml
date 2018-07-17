@@ -53,4 +53,4 @@ let print_valid y n =
     done
   done
 
-let () = print_valid 4 300
+let () = print_valid 6 1600
