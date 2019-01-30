@@ -42,6 +42,11 @@ let all_digits_once n =
     Array.for_all (fun b -> b) a
   end
 
+let rec find_answers n v =
+  if all_digits_once v then
+    Printf.printf "%d: %d\n%!" n v;
+  find_answers (n + 1) (v + phi (n + 1))
+
 let rec find_answer n v =
   if all_digits_once v then
     n
