@@ -29,30 +29,29 @@ let phi n =
   List.fold_left (fun x (p, n) -> x * pow p (n - 1) * (p - 1)) 1 (factorize n)
 
 let rec f n =
-  if n = 1 then 2
-  else phi n + f (n - 1)
+  if n = 1 then Z.of_int 2
+  else Z.add (Z.of_int (phi n)) (f (n - 1))
+
+let low = Z.of_string_base 16 "1023456789abcdef"
 
 let all_digits_once n =
-  let s = string_of_int n in
-  String.length s = 10 && begin
-    let a = Array.make 10 false in
-    for i = 0 to 9 do
-      a.(Char.code s.[i] - Char.code '0') <- true
+  n >= low && begin
+    let s = Z.format "%x" n in
+    let a = Array.make 16 false in
+    for i = 0 to 15 do
+      match s.[i] with
+      | '0' .. '9' -> a.(Char.code s.[i] - Char.code '0') <- true
+      | 'a' .. 'f' -> a.(Char.code s.[i] - Char.code 'a') <- true
     done;
     Array.for_all (fun b -> b) a
   end
-
-let rec find_answers n v =
-  if all_digits_once v then
-    Printf.printf "%d: %d\n%!" n v;
-  find_answers (n + 1) (v + phi (n + 1))
 
 let rec find_answer n v =
   if all_digits_once v then
     n
   else
-    find_answer (n + 1) (v + phi (n + 1))
+    find_answer (n + 1) (Z.add v (Z.of_int (phi (n + 1))))
 
 let () =
-  let ans = find_answer 1 2 in
-  Printf.printf "%d: %d\n" ans (f ans)
+  let ans = find_answer 1 (Z.of_int 2) in
+  Printf.printf "%d: %s\n" ans (Z.format "%x" (f ans))
