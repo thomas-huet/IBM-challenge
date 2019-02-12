@@ -42,6 +42,7 @@ let all_digits_once n =
       match s.[i] with
       | '0' .. '9' -> a.(Char.code s.[i] - Char.code '0') <- true
       | 'a' .. 'f' -> a.(Char.code s.[i] - Char.code 'a') <- true
+      | _ -> failwith "impossible"
     done;
     Array.for_all (fun b -> b) a
   end
@@ -53,5 +54,17 @@ let rec find_answer n v =
     find_answer (n + 1) (Z.add v (Z.of_int (phi (n + 1))))
 
 let () =
-  let ans = find_answer 1 (Z.of_int 2) in
-  Printf.printf "%d: %s\n" ans (Z.format "%x" (f ans))
+  (*
+  let n = ref 1 in
+  let v = ref (Z.of_int 2) in
+  *)
+  let n = ref 50331645 in
+  let v = ref (Z.of_string_base 16 "2bc54fa7a2f53") in
+  for e = 1 to 100 do
+    let m = pow 2 e in
+    for i = 1 to m do
+      incr n;
+      v := Z.add !v (Z.of_int (phi !n))
+    done;
+    Printf.printf "%d: %s\n%!" !n (Z.format "%x" !v)
+  done
