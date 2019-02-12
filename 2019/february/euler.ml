@@ -42,15 +42,11 @@ let all_digits_once n =
   end
 
 let () =
-  (*
   let n = ref 1 in
   let v = ref 2 in
-  *)
-  let n = ref 425615482 in
-  let v = ref 0xc39f19af441b9b in
   while true do
     incr n;
     v := !v + (phi !n);
     if all_digits_once !v then
-      Printf.printf "\n=== %d: %x ===\n\n%!" !n !v
+      Printf.printf "%d: %x\n%!" !n !v
   done
