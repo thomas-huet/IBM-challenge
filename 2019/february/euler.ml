@@ -47,6 +47,10 @@ let () =
   while true do
     incr n;
     v := !v + (phi !n);
-    if all_digits_once !v then
-      Printf.printf "%d: %x\n%!" !n !v
+    if all_digits_once !v then begin
+      Printf.printf "== %d: %x ==\n%!" !n !v;
+      exit 0
+    end;
+    if !n mod 1_000_000 = 0 then
+      Printf.eprintf "\r%d: %x%!" !n !v
   done
