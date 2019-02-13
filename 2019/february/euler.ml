@@ -35,7 +35,7 @@ let all_digits_once n =
     for i = 0 to 15 do
       match s.[i] with
       | '0' .. '9' -> a.(Char.code s.[i] - Char.code '0') <- true
-      | 'a' .. 'f' -> a.(Char.code s.[i] - Char.code 'a') <- true
+      | 'a' .. 'f' -> a.(Char.code s.[i] - Char.code 'a' + 10) <- true
       | _ -> failwith "impossible"
     done;
     Array.for_all (fun b -> b) a
